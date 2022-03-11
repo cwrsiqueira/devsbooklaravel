@@ -28,7 +28,7 @@ Route::post('/user', 'AuthController@create');
 
 Route::put('/user/{id}', 'UserController@update');
 Route::post('/user/avatar', 'UserController@updateAvatar');
-// Route::post('/user/cover', 'UserController@updateCover');
+Route::post('/user/cover', 'UserController@updateCover');
 
 // Route::get('/feed', 'FeedController@read');
 // Route::get('/user/feed', 'FeedController@userFeed');
@@ -37,7 +37,7 @@ Route::post('/user/avatar', 'UserController@updateAvatar');
 // Route::get('/user', 'UserController@read');
 // Route::get('/user/{id}', 'UserController@read');
 
-// Route::post('/feed', 'FeedController@create');
+Route::post('/feed', 'FeedController@create');
 
 // Route::post('/post/{id}/like', 'PostController@like');
 // Route::post('/post/{id}/comment', 'PostController@comment');
