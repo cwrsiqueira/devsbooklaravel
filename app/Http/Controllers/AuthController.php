@@ -104,6 +104,8 @@ class AuthController extends Controller
             $newUser->email = $data['email'];
             $newUser->password = Hash::make($data['password']);
             $newUser->birthdate = $data['birthdate'];
+            $newUser->avatar = 'default.jpg';
+            $newUser->cover = 'cover.jpg';
             $newUser->save();
 
             $credentials = $request->only('email', 'password');
