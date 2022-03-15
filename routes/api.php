@@ -30,6 +30,10 @@ Route::put('/user/{id}', 'UserController@update');
 Route::post('/user/avatar', 'UserController@updateAvatar');
 Route::post('/user/cover', 'UserController@updateCover');
 
+Route::post('/user/{id}/follow', 'UserController@follow');
+Route::get('/user/{id}/followers', 'UserController@followers');
+Route::get('/user/{id}/photos', 'UserController@photos');
+
 Route::get('/feed', 'FeedController@read');
 Route::get('/user/feed', 'FeedController@userFeed');
 Route::get('/user/{id}/feed', 'FeedController@userFeed');
@@ -39,7 +43,7 @@ Route::get('/user/{id}', 'UserController@read');
 
 Route::post('/feed', 'FeedController@create');
 
-// Route::post('/post/{id}/like', 'PostController@like');
-// Route::post('/post/{id}/comment', 'PostController@comment');
+Route::post('/post/{id}/like', 'PostController@like');
+Route::post('/post/{id}/comment', 'PostController@comment');
 
-// Route::get('/search', 'SearchController@search');
+Route::get('/search', 'SearchController@search');

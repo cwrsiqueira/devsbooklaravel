@@ -211,4 +211,101 @@ class UserController extends Controller
 
         return $array;
     }
+
+    public function follow($id)
+    {
+        $array = ["error" => ""];
+
+        $userExists = User::find($id);
+
+        if(!$userExists || $id == $this->loggedUser->id) {
+            $array['error'] = "Este usuário não póde ser seguido. Não existe ou é o próprio usuário";
+            return $array;
+        }
+
+        $isFollowing = UserRelation::where("user_from", $this->loggedUser->id)
+        ->where("user_to", $id)
+        ->first();
+
+        if($isFollowing) {
+            $isFollowing->delete();
+            $following = false;
+        } else {
+            $newUserFollowing = new UserRelation();
+            $newUserFollowing->user_from = $this->loggedUser->id;
+            $newUserFollowing->user_to = $id;
+            $newUserFollowing->created_at = date('Y-m-d H:i:s');
+            $newUserFollowing->save();
+            $following = true;
+        }
+
+        $array["following"] = $following;
+
+        return $array;
+    }
+
+    public function followers($id)
+    {
+        $array = [
+            "error" => "",
+            "followers" => [],
+            "following" => [],
+        ];
+
+        $userExists = User::find($id);
+
+        if(!$userExists) {
+            $array['error'] = "Este usuário não existe";
+            return $array;
+        }
+
+        $followers = UserRelation::select('user_from as id')->where("user_to", $id)->get();
+        $following = UserRelation::select('user_to as id')->where("user_from", $id)->get();
+
+        foreach($followers as $item) {
+            $follower = User::select('id', 'name', 'avatar')
+            ->where('id', $item['id'])
+            ->first();
+            $array['followers'][] = [
+                'id' => $follower->id,
+                'name' => $follower->name,
+                'avatar' => url("/media/avatars/" . $follower->avatar),
+            ];
+        }
+
+        foreach($following as $item) {
+            $following = User::select('id', 'name', 'avatar')
+            ->where('id', $item['id'])
+            ->first();
+            $array['following'][] = [
+                'id' => $following->id,
+                'name' => $following->name,
+                'avatar' => url("/media/avatars/" . $following->avatar),
+            ];
+        }
+
+        return $array;
+    }
+
+    public function photos($id)
+    {
+        $array = ["error" => ""];
+
+        $userExists = User::find($id);
+
+        if(!$userExists) {
+            $array['error'] = "Este usuário não existe";
+            return $array;
+        }
+
+        $photos = Post::where('type', 'photo')->where('id_user', $id)->get();
+
+        foreach($photos as $item) {
+            $item['body'] = url("/media/uploads" , $item['body']);
+        }
+
+        $array["photos"] = $photos;
+
+        return $array;
+    }
 }
