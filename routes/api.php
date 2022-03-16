@@ -32,7 +32,10 @@ Route::post('/user/cover', 'UserController@updateCover');
 
 Route::post('/user/{id}/follow', 'UserController@follow');
 Route::get('/user/{id}/followers', 'UserController@followers');
-Route::get('/user/{id}/photos', 'UserController@photos');
+
+Route::get('/user/{id}/photos', 'UserController@photos'); // SEM PAGINAÇÃOS
+Route::get('/user/userPhotos', 'FeedController@userPhotos'); // COM PAGINAÇÃO
+Route::get('/user/{id}/userPhotos', 'FeedController@userPhotos'); // COM PAGINAÇÃO
 
 Route::get('/feed', 'FeedController@read');
 Route::get('/user/feed', 'FeedController@userFeed');

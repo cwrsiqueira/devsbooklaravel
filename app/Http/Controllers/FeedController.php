@@ -154,6 +154,51 @@ class FeedController extends Controller
         return $array;
     }
 
+    public function userPhotos(Request $request, $id = false)
+    {
+        $array = ["error" => ""];
+
+        $page = intval($request->input('page'));
+        $perPage = 2;
+
+        // Pegar fotos dos usuários que eu sigo, inclusive os meus, ordenados por data
+        $postList = Post::where('id_user', $id)
+        ->where('type', 'photo')
+        ->orderBy('created_at', 'DESC')
+        ->offset($page * $perPage)
+        ->limit($perPage)
+        ->get();
+
+        $total = Post::where('id_user', $id)->where('type', 'photo')->count();
+        $pageCount = ceil($total / $perPage);
+
+        if(!$id) {
+            $postList = Post::where('type', 'photo')
+            ->orderBy('created_at', 'DESC')
+            ->offset($page * $perPage)
+            ->limit($perPage)
+            ->get();
+
+            $total = Post::where('type', 'photo')->count();
+            $pageCount = ceil($total / $perPage);
+        }
+
+        // Preencher informações adicionais - likes, comments etc.
+
+        $posts = $this->_postListToObject($postList, $this->loggedUser->id);
+
+        foreach($posts as $item) {
+            $item['body'] = url("/media/uploads" , $item['body']);
+        }
+
+        $array['posts'] = $posts;
+        $array['pageCount'] = $pageCount;
+        $array['currentPage'] = $page;
+        $array['totalPosts'] = $total;
+
+        return $array;
+    }
+
     private function _postListToObject($postList, $loggedId)
     {
         foreach ($postList as $postKey => $postItem) {

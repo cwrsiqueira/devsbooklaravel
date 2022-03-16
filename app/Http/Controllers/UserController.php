@@ -263,9 +263,7 @@ class UserController extends Controller
         $following = UserRelation::select('user_to as id')->where("user_from", $id)->get();
 
         foreach($followers as $item) {
-            $follower = User::select('id', 'name', 'avatar')
-            ->where('id', $item['id'])
-            ->first();
+            $follower = User::find($item['id']);
             $array['followers'][] = [
                 'id' => $follower->id,
                 'name' => $follower->name,
@@ -274,9 +272,7 @@ class UserController extends Controller
         }
 
         foreach($following as $item) {
-            $following = User::select('id', 'name', 'avatar')
-            ->where('id', $item['id'])
-            ->first();
+            $following = User::find($item['id']);
             $array['following'][] = [
                 'id' => $following->id,
                 'name' => $following->name,
